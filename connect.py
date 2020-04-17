@@ -6,14 +6,10 @@ def getDBconnection(username, password):
     port = 1521
     SID = 'xe'
     dsn_tns = cx_Oracle.makedsn(ip, port, SID)
-    # print(dsn_tns)
+    username = 'C##GEORGY'
+    password = 'georgy'
 
-    try:
-        con = cx_Oracle.connect(username, password, dsn_tns, encoding="UTF-8")
-        print('Succesfull connection')
-        return con
-    except cx_Oracle.Error as error:
-        print(error)
+    return cx_Oracle.connect(username, password, dsn_tns, encoding="UTF-8")
 
 
 def shutDownConnection(con):
@@ -21,9 +17,10 @@ def shutDownConnection(con):
     print('Connection closed')
 
 
-con = getDBconnection('C##GEORGY', 'georgy')
-curs = con.cursor()
-curs.execute("select * from projects")
-for row in curs:
-    print(row)
+if __name__ == '__main__':
+    con = getDBconnection('C##GEORGY', 'georgy')
+    curs = con.cursor()
+    curs.execute("select * from projects")
+    for row in curs:
+        print(row)
 
