@@ -75,9 +75,13 @@ class StartWindow(QWidget):
 
     def LogOutButtonClicked(self):
         self.close()
+        self.empWindow.close()
+        self.depWindow.close()
+        self.procWindow.close()
+        self.projWindow.close()
+
         connect.shutDownConnection(self.con)
         self.enterWindow.show()
-
 
     def ProcButtonClicked(self):
         self.procWindow.show()

@@ -13,6 +13,7 @@ def getDBconnection(username, password):
 
 
 def shutDownConnection(con):
+    con.commit()
     con.close()
     print('Connection closed')
 
