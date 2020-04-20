@@ -19,11 +19,12 @@ class StartWindow(QWidget):
         self.setGeometry(800, 400, 550, 250)
         self.setFixedSize(self.size())
         self.setWindowTitle('Главное меню')
+
         self.procWindow = procedureWindow.procWindow(self.con)
         self.projWindow = projWindow.projWindow(self.con)
         self.depWindow = depWindow.depWindow(self.con)
         self.empWindow = empWindow.empWindow(self.con)
-        self.enterWindow = enterWindow.EnterWindow()
+
 
         titleLabel = QLabel('Выберите дальнейшнее действие', self)
         titleLabel.move(120, 50)
@@ -79,7 +80,7 @@ class StartWindow(QWidget):
         self.depWindow.close()
         self.procWindow.close()
         self.projWindow.close()
-
+        self.enterWindow = enterWindow.EnterWindow()
         connect.shutDownConnection(self.con)
         self.enterWindow.show()
 
