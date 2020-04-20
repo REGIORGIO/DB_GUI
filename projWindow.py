@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QComboBox, QLineEdit, QTableWidget, QTableWidgetItem, \
     QMessageBox
 from PyQt5.QtGui import *
+from datetime import datetime, date
 
 
 class projWindow(QWidget):
@@ -10,7 +11,7 @@ class projWindow(QWidget):
         self.setWindowTitle('Проекты')
 
         self.con = con
-        self.setGeometry(1500, 400, 900, 500)
+        self.setGeometry(1500, 400, 1000, 500)
         self.setFixedSize(self.size())
 
         self.add_btn = QPushButton('Добавить', self)
@@ -29,86 +30,104 @@ class projWindow(QWidget):
         self.delete_btn.clicked.connect(self.delete_clicked)
 
         self.title_label = QLabel('', self)
-        self.title_label.move(550, 30)
+        self.title_label.move(670, 20)
         self.title_label.setFont(QFont('Helvetica', 18))
 
-
         self.id_label = QLabel('ID', self)
-        self.id_label.move(570, 100)
+        self.id_label.move(670, 60)
 
-        self.surname_label = QLabel('Фамилия', self)
-        self.surname_label.move(570, 150)
+        self.name_label = QLabel('Название', self)
+        self.name_label.move(670, 110)
 
-        self.name_label = QLabel('Имя', self)
-        self.name_label.move(570, 200)
+        self.cost_label = QLabel('Cтоимость', self)
+        self.cost_label.move(670, 160)
 
-        self.position_label = QLabel('Должность', self)
-        self.position_label.move(570, 250)
+        self.dep_label = QLabel('Отдел', self)
+        self.dep_label.move(670, 210)
 
-        self.salary_label = QLabel('Зарплата', self)
-        self.salary_label.move(570, 300)
+        self.date_beg_label = QLabel('Дата начала', self)
+        self.date_beg_label.move(670, 260)
+
+        self.date_end_label = QLabel('Дата завершения', self)
+        self.date_end_label.move(670, 310)
+
+        self.date_end_real_label = QLabel('Дата завершения итог', self)
+        self.date_end_real_label.move(670, 360)
 
         # self.department_label = QLabel('Отдел', self)
         # self.department_label.move(570, 350)
 
-
-
         self.id_combobox = QComboBox(self)
-        self.id_combobox.move(675, 100)
+        self.id_combobox.move(835, 60)
         self.id_combobox.resize(163, 20)
         self.id_combobox.currentIndexChanged.connect(self.id_changed)
 
-        self.surname_edit = QLineEdit(self)
-        self.surname_edit.move(680, 150)
-        self.surname_edit.resize(150, 20)
-
         self.name_edit = QLineEdit(self)
-        self.name_edit.move(680, 200)
+        self.name_edit.move(840, 110)
         self.name_edit.resize(150, 20)
 
-        self.position_edit = QLineEdit(self)
-        self.position_edit.move(680, 250)
-        self.position_edit.resize(150, 20)
+        self.cost_edit = QLineEdit(self)
+        self.cost_edit.move(840, 160)
+        self.cost_edit.resize(150, 20)
 
-        self.salary_edit = QLineEdit(self)
-        self.salary_edit.move(680, 300)
-        self.salary_edit.resize(150, 20)
+        self.dep_edit = QLineEdit(self)
+        self.dep_edit.move(840, 210)
+        self.dep_edit.resize(150, 20)
+
+        self.date_beg_edit = QLineEdit(self)
+        self.date_beg_edit.move(840, 260)
+        self.date_beg_edit.resize(150, 20)
+
+        self.date_end_edit = QLineEdit(self)
+        self.date_end_edit.move(840, 310)
+        self.date_end_edit.resize(150, 20)
+
+        self.date_end_real_edit = QLineEdit(self)
+        self.date_end_real_edit.move(840, 360)
+        self.date_end_real_edit.resize(150, 20)
 
         # self.department_edit = QLineEdit(self)
         # self.department_edit.move(680, 350)
         # self.department_edit.resize(150, 20)
 
         self.apply_btn = QPushButton('Сохранить', self)
-        self.apply_btn.move(740, 420)
+        self.apply_btn.move(840, 420)
         self.apply_btn.resize(150, 30)
         self.apply_btn.clicked.connect(self.apply_clicked)
 
         self.commit_btn = QPushButton('Сохранить', self)
-        self.commit_btn.move(570, 460)
+        self.commit_btn.move(670, 460)
         self.commit_btn.resize(150, 30)
         self.commit_btn.clicked.connect(self.commit_clicked)
 
         self.rollback_btn = QPushButton('Отменить', self)
-        self.rollback_btn.move(740, 460)
+        self.rollback_btn.move(840, 460)
         self.rollback_btn.resize(150, 30)
         self.rollback_btn.clicked.connect(self.rollback_clicked)
 
         self.table = QTableWidget(self)
         self.table.setColumnCount(6)
-        self.table.resize(660, 450)
+        self.table.resize(630, 450)
 
         # self.table.setDisabled(True)
         self.update_table()
         self.update_combobox()
         self.hide_all()
 
-    def add_emp(self):
-
-        if self.name_edit.text() and  self.surname_edit.text() and self.position_edit.text() and self.salary_edit.text():
+    def add_proj(self):
+        if self.name_edit.text() and self.cost_edit.text() and self.date_beg_edit.text() and self.date_end_edit.text():
+                # and self.cost_edit.text().isnumeric() and self.dep_edit.text().isdecimal():
 
             cur = self.con.cursor()
-
-            query =r"INSERT INTO EMPLOYEES(FIRST_NAME, LAST_NAME, POSITION, SALARY) VALUES ('{}', '{}', '{}', {})".format(self.name_edit.text(), self.surname_edit.text(), self.position_edit.text(), float(self.salary_edit.text()))
+            date_beg = datetime.strptime(self.date_beg_edit.text(), "%Y-%m-%d %H:%M:%S")
+            date_end = datetime.strptime(self.date_end_edit.text(), "%Y-%m-%d %H:%M:%S")
+            print(date_beg)
+            query = r"INSERT INTO projects(NAME, COST, Department_ID, Date_beg, Date_end, Date_end_real) " \
+                    r"VALUES ('{}', {}, {}, {}, {})".format(self.name_edit.text(),
+                                                            int(self.cost_edit.text()),
+                                                            int(self.dep_edit.text()),
+                                                            date_beg,
+                                                            date_end)
             cur.execute(query)
             # self.con.commit()
             self.update_table()
@@ -118,36 +137,63 @@ class projWindow(QWidget):
             error_d.setText("Заполните все поля!")
             error_d.setWindowTitle("Ошибка!")
             error_d.exec_()
-        # print('Добавлено')
+        print('Добавлено')
 
-    def delete_emp(self):
+    def delete_proj(self):
         try:
             cur = self.con.cursor()
-            query = r"DELETE from employees where ID = {}".format(int(self.id_combobox.currentText()))
+            query = r"DELETE from projects where ID = {}".format(int(self.id_combobox.currentText()))
             cur.execute(query)
             # self.con.commit()
             self.update_table()
             self.update_combobox()
             self.update_table()
         except:
+            print("Неизвестная ошибка!")
             error_d = QMessageBox()
             error_d.setIcon(QMessageBox.Critical)
-            error_d.setText("Заполните все поля!")
-            error_d.setWindowTitle("Ошибка!")
-            error_d.exec_()
+            error_d.setWindowTitle("Неизвестная ошибка!")
 
-    def update_emp(self):
+    def update_proj(self):
+
+        # try:
         cur = self.con.cursor()
-        query = r"Update employees set First_name = '{}', " \
-                r"Last_name = '{}', " \
-                r"Position = '{}', " \
-                r"Salary = {}" \
+        # r"Date_beg = TO_DATE('{}', 'YYYY-MM-DD HH24:MI:SS') " \
+        # query = r"Update projects set name = '{}', " \
+        #         r"cost = {} " \
+        #         r"where id = {}".format('Проект', int(self.cost_edit.text()), int(self.id_combobox.currentText()))
+        #                         # int(self.cost_edit.text()),
+        #                         # int(self.dep_edit.text()),
+        #                         # int(self.id_combobox.currentText()))
+
+        query = r"Update projects set name = '{}', " \
+                r"Cost = '{}', " \
+                r" Department_id = {} " \
                 r" where id = {}".format(self.name_edit.text(),
-                                         self.surname_edit.text(),
-                                         self.position_edit.text(),
-                                         self.salary_edit.text(),
+                                         int(self.cost_edit.text()),
+                                         int(self.dep_edit.text()),
                                          int(self.id_combobox.currentText()))
+        print(query)
         cur.execute(query)
+        # except:
+        #     error_d = QMessageBox()
+        #     error_d.setIcon(QMessageBox.Critical)
+        #     error_d.setText("Хз че случилось!")
+        #     error_d.setWindowTitle("Ошибка!")
+        #     error_d.exec_()
+        # if self.date_end_real_edit.text() is not 'None':
+        #     try:
+        #         date_end_real = datetime.strptime(self.date_end_real_edit.text(), "%d-%m-%Y %H:%M:%S")
+        #     except:
+        #         error_d = QMessageBox()
+        #         error_d.setIcon(QMessageBox.Critical)
+        #         error_d.setText("Неправильный формат даты!")
+        #         error_d.setWindowTitle("Ошибка!")
+        #         error_d.exec_()
+        # else:
+        #     date_end_real = 'None'
+
+
 
         self.update_combobox()
         self.update_table()
@@ -157,7 +203,7 @@ class projWindow(QWidget):
     def update_combobox(self):
         cur = self.con.cursor()
         self.id_combobox.clear()
-        cur.execute("select id from employees")
+        cur.execute("select id from projects")
         l = cur.fetchall()
         for id in l:
             self.id_combobox.addItem(str(id[0]))
@@ -169,7 +215,8 @@ class projWindow(QWidget):
         curs.execute('select count(*) from projects')
         self.N_ROWS = curs.fetchone()[0]
         self.table.setRowCount(self.N_ROWS)
-        self.table.setHorizontalHeaderLabels(['ID', 'Название', 'Стоимость', 'Дата начала', 'Дата завершения', 'Реальная дата завершения'])
+        self.table.setHorizontalHeaderLabels(
+            ['ID', 'Название', 'Стоимость', 'Дата начала', 'Дата завершения', 'Реальная дата завершения'])
         curs.execute("select id, name, cost, date_beg, date_end, date_end_real from projects order by id")
 
         l = curs.fetchall()
@@ -182,13 +229,15 @@ class projWindow(QWidget):
 
     def update_edits(self):
         cur = self.con.cursor()
-        cur.execute('select * from employees')
+        cur.execute('select * from projects')
         l = cur.fetchall()
-        self.surname_edit.setText(l[int(self.id_combobox.currentIndex())][3])
-        self.name_edit.setText(l[int(self.id_combobox.currentIndex())][1])
-        self.position_edit.setText(l[int(self.id_combobox.currentIndex())][4])
-        self.salary_edit.setText(str(l[int(self.id_combobox.currentIndex())][5]))
-        # self.surname_edit.setText(l[int(self.id_combobox.currentIndex())][3])
+
+        self.name_edit.setText(str(l[int(self.id_combobox.currentIndex())][1]))
+        self.cost_edit.setText(str(l[int(self.id_combobox.currentIndex())][2]))
+        self.dep_edit.setText(str(l[(int(self.id_combobox.currentIndex()))][3]))
+        self.date_beg_edit.setText(str(l[int(self.id_combobox.currentIndex())][4]))
+        self.date_end_edit.setText(str(l[int(self.id_combobox.currentIndex())][5]))
+        self.date_end_real_edit.setText(str((l[int(self.id_combobox.currentIndex())][6])))
 
     def id_changed(self):
         print(self.id_combobox.currentText())
@@ -197,19 +246,23 @@ class projWindow(QWidget):
     def add_clicked(self):
         # self.add_btn.setDisabled(True)
         self.hide_all()
-
-        self.title_label.setText('Введите данные нового сотрудника')
+        self.clear_all()
+        self.title_label.setText('Введите данные нового проекта')
         self.title_label.show()
 
-        self.surname_label.show()
+        self.dep_label.show()
         self.name_label.show()
-        self.salary_label.show()
-        self.position_label.show()
+        self.cost_label.show()
+        self.date_end_label.show()
+        self.date_beg_label.show()
+        self.date_end_real_label.show()
 
-        self.surname_edit.show()
         self.name_edit.show()
-        self.salary_edit.show()
-        self.position_edit.show()
+        self.cost_edit.show()
+        self.dep_edit.show()
+        self.date_end_edit.show()
+        self.date_beg_edit.show()
+        self.date_end_real_edit.show()
 
         self.apply_btn.setText('Добавить')
         self.rollback_btn.setText('Отменить')
@@ -220,21 +273,25 @@ class projWindow(QWidget):
     def modify_clicked(self):
         self.hide_all()
 
-        self.title_label.setText('Измените данные сотрудника')
+        self.title_label.setText('Измените данные проекта')
         self.title_label.show()
 
         self.id_label.show()
-        self.surname_label.show()
+        self.dep_label.show()
+        self.cost_label.show()
         self.name_label.show()
-        self.salary_label.show()
-        self.position_label.show()
+        self.date_end_label.show()
+        self.date_beg_label.show()
+        self.date_end_real_label.show()
         # self.department_label.show()
 
         self.id_combobox.show()
-        self.surname_edit.show()
         self.name_edit.show()
-        self.salary_edit.show()
-        self.position_edit.show()
+        self.cost_edit.show()
+        self.dep_edit.show()
+        self.date_end_edit.show()
+        self.date_beg_edit.show()
+        self.date_end_real_edit.show()
         # self.department_edit.show()
 
         self.apply_btn.setText('Изменить')
@@ -247,7 +304,7 @@ class projWindow(QWidget):
     def delete_clicked(self):
         self.hide_all()
 
-        self.title_label.setText('Введите ID сотрудника для удаления')
+        self.title_label.setText('Введите ID проекта для удаления')
         self.title_label.show()
 
         self.id_combobox.show()
@@ -263,38 +320,45 @@ class projWindow(QWidget):
     def apply_clicked(self):
         # print('Commit clicked')
         if self.apply_btn.text() == 'Добавить':
-            self.add_emp()
+            self.add_proj()
         elif self.apply_btn.text() == 'Удалить':
-            self.delete_emp()
+            self.delete_proj()
         elif self.apply_btn.text() == 'Изменить':
-            self.update_emp()
+            self.update_proj()
 
         # self.clear_all()
 
     def commit_clicked(self):
         self.con.commit()
+        self.clear_all()
+        self.hide_all()
 
     def rollback_clicked(self):
         self.con.rollback()
         self.update_table()
         self.update_combobox()
+        self.clear_all()
+        self.hide_all()
 
     def hide_all(self):
         self.title_label.setVisible(False)
 
-        self.id_label.setVisible(False)
-        self.surname_label.setVisible(False)
-        self.name_label.setVisible(False)
-        # print(self.name_edit.isVisible())
-        self.salary_label.hide()
-        self.position_label.hide()
+        self.id_label.hide()
+        self.dep_label.hide()
+        self.cost_label.hide()
+        self.name_label.hide()
+        self.date_end_label.hide()
+        self.date_beg_label.hide()
+        self.date_end_real_label.hide()
         # self.department_label.setHidden(True)
 
         self.id_combobox.hide()
-        self.surname_edit.hide()
         self.name_edit.hide()
-        self.salary_edit.hide()
-        self.position_edit.hide()
+        self.cost_edit.hide()
+        self.dep_edit.hide()
+        self.date_end_edit.hide()
+        self.date_beg_edit.hide()
+        self.date_end_real_edit.hide()
         # self.department_edit.setHidden(True)
 
         self.apply_btn.hide()
@@ -302,8 +366,10 @@ class projWindow(QWidget):
         self.commit_btn.hide()
 
     def clear_all(self):
-        self.surname_edit.clear()
         self.name_edit.clear()
-        self.salary_edit.clear()
-        self.position_edit.clear()
+        self.cost_edit.clear()
+        self.dep_edit.clear()
+        self.date_end_edit.clear()
+        self.date_beg_edit.clear()
+        self.date_end_real_edit.clear()
         # self.department_edit.clear()
