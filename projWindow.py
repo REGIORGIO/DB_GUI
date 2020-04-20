@@ -70,9 +70,9 @@ class projWindow(QWidget):
         self.cost_edit.move(840, 160)
         self.cost_edit.resize(150, 20)
 
-        self.dep_edit = QLineEdit(self)
-        self.dep_edit.move(840, 210)
-        self.dep_edit.resize(150, 20)
+        self.dep_combobox = QComboBox(self)
+        self.dep_combobox.move(835, 210)
+        self.dep_combobox.resize(163, 20)
 
         self.date_beg_edit = QLineEdit(self)
         self.date_beg_edit.move(840, 260)
@@ -111,23 +111,40 @@ class projWindow(QWidget):
 
         # self.table.setDisabled(True)
         self.update_table()
-        self.update_combobox()
+        self.update_id_combobox()
+        self.update_dep_combobox()
         self.hide_all()
 
     def add_proj(self):
         if self.name_edit.text() and self.cost_edit.text() and self.date_beg_edit.text() and self.date_end_edit.text():
-                # and self.cost_edit.text().isnumeric() and self.dep_edit.text().isdecimal():
+
 
             cur = self.con.cursor()
-            date_beg = datetime.strptime(self.date_beg_edit.text(), "%Y-%m-%d %H:%M:%S")
-            date_end = datetime.strptime(self.date_end_edit.text(), "%Y-%m-%d %H:%M:%S")
-            print(date_beg)
-            query = r"INSERT INTO projects(NAME, COST, Department_ID, Date_beg, Date_end, Date_end_real) " \
-                    r"VALUES ('{}', {}, {}, {}, {})".format(self.name_edit.text(),
-                                                            int(self.cost_edit.text()),
-                                                            int(self.dep_edit.text()),
-                                                            date_beg,
-                                                            date_end)
+
+            query = r"INSERT INTO projects(NAME, COST, Department_Id, Date_beg, Date_end) " \
+                    r"VALUES ('{}', {}, {}, TO_DATE('{}', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('{}', 'YYYY-MM-DD HH24:MI:SS'))".format(self.name_edit.text(),
+                                                                                                                                    int(self.cost_edit.text()),
+                                                                                                                                    int(self.dep_combobox.text()),
+                                                                                                                                    self.date_beg_edit.text(),
+                                                                                                                                    self.date_end_edit.text())
+            print(query)
+
+            cur.execute(query)
+            # self.con.commit()
+            self.update_table()
+
+        if self.name_edit.text() and self.cost_edit.text() and self.date_beg_edit.text() and not self.date_end_edit.text():
+
+
+            cur = self.con.cursor()
+
+            query = r"INSERT INTO projects(NAME, COST, Department_Id, Date_beg) " \
+                    r"VALUES ('{}', {}, {}, TO_DATE('{}', 'YYYY-MM-DD HH24:MI:SS'))".format(self.name_edit.text(),
+                                                                                            int(self.cost_edit.text()),
+                                                                                            int(self.dep_combobox.text()),
+                                                                                            self.date_beg_edit.text())
+            print(query)
+
             cur.execute(query)
             # self.con.commit()
             self.update_table()
@@ -146,7 +163,8 @@ class projWindow(QWidget):
             cur.execute(query)
             # self.con.commit()
             self.update_table()
-            self.update_combobox()
+            self.update_id_combobox()
+            self.update_dep_combobox()
             self.update_table()
         except:
             print("Неизвестная ошибка!")
@@ -171,7 +189,7 @@ class projWindow(QWidget):
                 r" Department_id = {} " \
                 r" where id = {}".format(self.name_edit.text(),
                                          int(self.cost_edit.text()),
-                                         int(self.dep_edit.text()),
+                                         int(self.dep_combobox.currentText().split()[0]),
                                          int(self.id_combobox.currentText()))
         print(query)
         cur.execute(query)
@@ -193,26 +211,36 @@ class projWindow(QWidget):
         # else:
         #     date_end_real = 'None'
 
-
-
-        self.update_combobox()
+        self.update_id_combobox()
+        self.update_dep_combobox()
         self.update_table()
         self.clear_all()
         self.update_edits()
 
-    def update_combobox(self):
+    def update_id_combobox(self):
         cur = self.con.cursor()
         self.id_combobox.clear()
-        cur.execute("select id from projects")
+        cur.execute("select id from projects ")
         l = cur.fetchall()
         for id in l:
             self.id_combobox.addItem(str(id[0]))
 
         self.id_combobox.setCurrentIndex(0)
 
+    def update_dep_combobox(self):
+        cur = self.con.cursor()
+        self.dep_combobox.clear()
+
+        cur.execute("select id, name from departments ")
+        l = cur.fetchall()
+        for id in l:
+            self.dep_combobox.addItem(("{} - {}".format(id[0], id[1])))
+
+        self.dep_combobox.setCurrentIndex(0)
+
     def update_table(self):
         curs = self.con.cursor()
-        curs.execute('select count(*) from projects')
+        curs.execute('select count(*) from projects order by id')
         self.N_ROWS = curs.fetchone()[0]
         self.table.setRowCount(self.N_ROWS)
         self.table.setHorizontalHeaderLabels(
@@ -229,15 +257,18 @@ class projWindow(QWidget):
 
     def update_edits(self):
         cur = self.con.cursor()
-        cur.execute('select * from projects')
+        cur.execute('select * from projects order by id')
         l = cur.fetchall()
 
         self.name_edit.setText(str(l[int(self.id_combobox.currentIndex())][1]))
         self.cost_edit.setText(str(l[int(self.id_combobox.currentIndex())][2]))
-        self.dep_edit.setText(str(l[(int(self.id_combobox.currentIndex()))][3]))
+
+        # self.dep_combobox.setText(str(l[(int(self.id_combobox.currentIndex()))][3]))
         self.date_beg_edit.setText(str(l[int(self.id_combobox.currentIndex())][4]))
         self.date_end_edit.setText(str(l[int(self.id_combobox.currentIndex())][5]))
         self.date_end_real_edit.setText(str((l[int(self.id_combobox.currentIndex())][6])))
+
+
 
     def id_changed(self):
         print(self.id_combobox.currentText())
@@ -259,7 +290,7 @@ class projWindow(QWidget):
 
         self.name_edit.show()
         self.cost_edit.show()
-        self.dep_edit.show()
+        self.dep_combobox.show()
         self.date_end_edit.show()
         self.date_beg_edit.show()
         self.date_end_real_edit.show()
@@ -288,7 +319,7 @@ class projWindow(QWidget):
         self.id_combobox.show()
         self.name_edit.show()
         self.cost_edit.show()
-        self.dep_edit.show()
+        self.dep_combobox.show()
         self.date_end_edit.show()
         self.date_beg_edit.show()
         self.date_end_real_edit.show()
@@ -331,14 +362,15 @@ class projWindow(QWidget):
     def commit_clicked(self):
         self.con.commit()
         self.clear_all()
-        self.hide_all()
+        # self.hide_all()
 
     def rollback_clicked(self):
         self.con.rollback()
         self.update_table()
-        self.update_combobox()
+        self.update_id_combobox()
+        self.update_dep_combobox()
         self.clear_all()
-        self.hide_all()
+        # self.hide_all()
 
     def hide_all(self):
         self.title_label.setVisible(False)
@@ -355,7 +387,7 @@ class projWindow(QWidget):
         self.id_combobox.hide()
         self.name_edit.hide()
         self.cost_edit.hide()
-        self.dep_edit.hide()
+        self.dep_combobox.hide()
         self.date_end_edit.hide()
         self.date_beg_edit.hide()
         self.date_end_real_edit.hide()
@@ -368,7 +400,7 @@ class projWindow(QWidget):
     def clear_all(self):
         self.name_edit.clear()
         self.cost_edit.clear()
-        self.dep_edit.clear()
+        self.dep_combobox.clear()
         self.date_end_edit.clear()
         self.date_beg_edit.clear()
         self.date_end_real_edit.clear()
