@@ -7,8 +7,7 @@ import sys
 import startWindow
 import resultWindow
 import cx_Oracle
-import datetime
-import time
+from datetime import datetime
 
 class procWindow(QWidget):
     def __init__(self, con):
@@ -35,15 +34,49 @@ class procWindow(QWidget):
 
         self.l4 = QLabel('Введите начальную дату периода', self)
         self.l4.resize(310, 100)
-        self.l4.move(320, 220)
-        self.l4.setFont(QFont('Helvetica', 16))
+        self.l4.move(330, 200)
+        self.l4.setFont(QFont('Helvetica', 15))
         self.l5 = QLabel('(Формат DD/MM/YYYY)', self)
+
+        self.dd = QLabel('Число', self)
+        self.dd.resize(310, 100)
+        self.dd.move(300, 230)
+        self.dd.setFont(QFont('Helvetica', 14))
+        self.dd.hide()
+
+        self.combdd = QComboBox(self)
+        self.combdd.resize(100, 80)
+        self.combdd.move(275, 280)
+        self.combdd.hide()
+
+        self.mm = QLabel('Месяц', self)
+        self.mm.resize(310, 100)
+        self.mm.move(430, 230)
+        self.mm.setFont(QFont('Helvetica', 14))
+        self.mm.hide()
+
+        self.combmm = QComboBox(self)
+        self.combmm.resize(100, 80)
+        self.combmm.move(405, 280)
+        self.combmm.hide()
+
+
+        self.yy = QLabel('Год', self)
+        self.yy.resize(310, 100)
+        self.yy.move(565, 230)
+        self.yy.setFont(QFont('Helvetica', 14))
+        self.yy.hide()
+
+        self.combyy = QComboBox(self)
+        self.combyy.resize(100, 80)
+        self.combyy.move(530, 280)
+        self.combyy.hide()
+
         self.l5.resize(310, 100)
         self.l5.move(380, 240)
         self.l5.setFont(QFont('Helvetica', 13))
         self.l4.hide()
         self.l5.hide()
-
 
         self.text = QLineEdit(self)
         self.text.resize(110, 50)
@@ -127,6 +160,12 @@ class procWindow(QWidget):
         self.close()
 
     def proc1(self):
+        self.dd.hide()
+        self.mm.hide()
+        self.yy.hide()
+        self.combdd.hide()
+        self.combmm.hide()
+        self.combyy.hide()
         self.l4.hide()
         self.l5.hide()
         self.text.hide()
@@ -153,12 +192,27 @@ class procWindow(QWidget):
         self.btn_show4.hide()
         ##self.showRes2()
         self.l4.show()
-        self.l5.show()
-        self.text.show()
+        ##self.l5.show()
+        ##self.text.show()
+        self.dd.show()
+        self.mm.show()
+        self.yy.show()
+        self.combdd.show()
+        self.combmm.show()
+        self.combyy.show()
+        self.init_dd()
+        self.init_mm()
+        self.init_yy()
         self.btn_show2.show()
         self.btn_show2.clicked.connect(self.showRes2)
 
     def proc3(self):
+        self.dd.hide()
+        self.mm.hide()
+        self.yy.hide()
+        self.combdd.hide()
+        self.combmm.hide()
+        self.combyy.hide()
         self.l4.hide()
         self.l5.hide()
         self.text.hide()
@@ -175,6 +229,12 @@ class procWindow(QWidget):
         self.btn_show3.clicked.connect(self.showRes3)
 
     def proc4(self):
+        self.dd.hide()
+        self.mm.hide()
+        self.yy.hide()
+        self.combdd.hide()
+        self.combmm.hide()
+        self.combyy.hide()
         self.l4.hide()
         self.l5.hide()
         self.text.hide()
@@ -221,6 +281,30 @@ class procWindow(QWidget):
 
         self.box3.setCurrentIndex(0)
 
+    def init_dd(self):
+        self.combdd.clear()
+        self.combdd.addItems(['01', '02', '03','04', '05', '06', '07', '08', '09',
+                              '10', '11', '12', '13', '14', '15', '16', '17', '18',
+                              '19', '20', '21', '22', '23', '24', '25', '26', '27',
+                              '28', '29', '30', '31'])
+
+        self.combdd.setCurrentIndex(0)
+
+    def init_mm(self):
+        self.combmm.clear()
+        self.combmm.addItems(['01', '02', '03', '04', '05', '06', '07', '08', '09',
+                              '10', '11', '12'])
+
+        self.combmm.setCurrentIndex(0)
+
+    def init_yy(self):
+        self.combyy.clear()
+        self.combyy.addItems(['1999', '2000', '2001', '2002', '2003', '2004', '2005', '2006', '2007',
+                              '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016',
+                              '2017', '2018', '2019', '2020'])
+
+        self.combyy.setCurrentIndex(0)
+
     def showRes1(self):
         self.resWindow.show()
         cur = self.con.cursor()
@@ -237,21 +321,18 @@ class procWindow(QWidget):
         self.resWindow.show()
 
         cur = self.con.cursor()
-        ##rep_date = datetime.date(1,1,2019)
-        date = datetime.date(2019,1,1)
-        date = str(date.strftime('%d.%m.%Y'))
-        print(date)
-        cur_val = cur.var(cx_Oracle.NUMBER)
-        cur.callproc('pr_5', ['01.01.19'])
+        arg = datetime.now()
+        print(arg)
+        # arg
+        #cur.callproc('pr_5', [datetime.strftime(datetime.strptime('01-JANUARY-2019', '%d-%B-%Y'), '%dd%mm%YYYY')])
+        cur.execute(
+            "ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MM-YYYY'"
+            " NLS_TIMESTAMP_FORMAT = 'DD-MM-YYYY'")
+        str = self.combdd.currentText()+self.combmm.currentText()+self.combyy.currentText()
+        ##print(str)
+        cur.callproc('pr_5', [str])
 
-        cur2 = self.con.cursor()
-        cur2.execute('select * from table_pr5')
-        l = cur2.fetchall()
-        for id in l:
-            print(id)
-        # cur.execute('''v_date DATE:= '01/01/2019;''')
-        # cur.execute('''profit NUMBER;''')
-        # cur.execute('''pr_5(v_date, profit);''')
+        self.resWindow.update_table2()
 
     def showRes3(self):
         self.resWindow.show()

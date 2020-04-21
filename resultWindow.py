@@ -6,7 +6,7 @@ import secondaryWindow
 import procWindow
 import sys
 import startWindow
-import pdfrw
+from datetime import date
 
 class resultWindow(QWidget):
     def __init__(self, con):
@@ -58,11 +58,12 @@ class resultWindow(QWidget):
         self.table.resize(520, 450)
         self.table.move(185, 0)
         cur = self.con.cursor()
-        cur.execute('select count(*) from outp')
+        cur.execute('select count(*) from table_pr5')
         self.N_ROWS = cur.fetchone()[0]
         self.table.setRowCount(self.N_ROWS)
-        self.table.setHorizontalHeaderLabels(['Название'])
-        cur.execute("select * from outp")
+        self.table.setColumnWidth(0, 500)
+        self.table.setHorizontalHeaderLabels(['Прибыль'])
+        cur.execute("select * from table_pr5")
 
         self.l = cur.fetchall()
         ll = []
