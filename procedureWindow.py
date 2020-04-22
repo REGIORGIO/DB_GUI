@@ -308,55 +308,75 @@ class procWindow(QWidget):
     def showRes1(self):
         self.resWindow.show()
         cur = self.con.cursor()
-        cur.callproc('output_dep')
-        # cur2 = self.con.cursor()
-        # cur2.execute('select * from output_d')
-        # l = cur2.fetchall()
-        # for id in l:
-        #     print(id)
-
-        self.resWindow.update_table1()
+        try:
+            cur.callproc('output_dep')
+            self.resWindow.update_table1()
+        except:
+            print("Неизвестная ошибка!")
+            error_d = QMessageBox()
+            error_d.setIcon(QMessageBox.Critical)
+            error_d.setWindowTitle("Ошибка!")
+            error_d.setText("Ошибка вызова процедуры!\nПовторите попытку позднее")
+            error_d.exec_()
+            return
 
     def showRes2(self):
         self.resWindow.show()
 
         cur = self.con.cursor()
-        arg = datetime.now()
-        print(arg)
-        # arg
-        #cur.callproc('pr_5', [datetime.strftime(datetime.strptime('01-JANUARY-2019', '%d-%B-%Y'), '%dd%mm%YYYY')])
-        cur.execute(
-            "ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MM-YYYY'"
-            " NLS_TIMESTAMP_FORMAT = 'DD-MM-YYYY'")
-        str = self.combdd.currentText()+self.combmm.currentText()+self.combyy.currentText()
-        ##print(str)
-        cur.callproc('pr_5', [str])
-
-        self.resWindow.update_table2()
+        try:
+            cur.execute(
+                "ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MM-YYYY'"
+                " NLS_TIMESTAMP_FORMAT = 'DD-MM-YYYY'")
+            str = self.combdd.currentText()+self.combmm.currentText()+self.combyy.currentText()
+            self.resWindow.text1 = self.combdd.currentText()
+            self.resWindow.text2 = self.combmm.currentText()
+            self.resWindow.text3 = self.combyy.currentText()
+            cur.callproc('pr_5', [str])
+            self.resWindow.update_table2()
+        except:
+            print("Неизвестная ошибка!")
+            error_d = QMessageBox()
+            error_d.setIcon(QMessageBox.Critical)
+            error_d.setWindowTitle("Ошибка!")
+            error_d.setText("Ошибка вызова процедуры!\nПовторите попытку позднее")
+            error_d.exec_()
+            return
 
     def showRes3(self):
         self.resWindow.show()
-        self.resWindow.show()
         cur = self.con.cursor()
-        cur.callproc('pr_3', [int(self.box3.currentText())])
+        try:
+            cur.callproc('pr_3', [int(self.box3.currentText())])
 
-        # cur2 = self.con.cursor()
-        # cur2.execute('select * from table_pr3')
-        # l = cur2.fetchall()
-        # for id in l:
-        #     print(id)
-        self.resWindow.update_table3()
+            self.resWindow.text1 = (self.box3.currentText())
+            self.resWindow.update_table3()
+        except:
+            print("Неизвестная ошибка!")
+            error_d = QMessageBox()
+            error_d.setIcon(QMessageBox.Critical)
+            error_d.setWindowTitle("Ошибка!")
+            error_d.setText("Ошибка вызова процедуры!\nПовторите попытку позднее")
+            error_d.exec_()
+            return
 
     def showRes4(self):
         self.resWindow.show()
         cur = self.con.cursor()
-        cur.callproc('proj2', [int(self.box1.currentText()), int(self.box2.currentText())])
+        try:
+            cur.callproc('proj2', [int(self.box1.currentText()), int(self.box2.currentText())])
 
-        # cur2 = self.con.cursor()
-        # cur2.execute('select * from outp')
-        # l = cur2.fetchall()
-        # for id in l:
-        #     print(id)
-        self.resWindow.update_table4()
+            self.resWindow.text1 = (self.box1.currentText())
+            self.resWindow.text2 = (self.box2.currentText())
+
+            self.resWindow.update_table4()
+        except:
+            print("Неизвестная ошибка!")
+            error_d = QMessageBox()
+            error_d.setIcon(QMessageBox.Critical)
+            error_d.setWindowTitle("Ошибка!")
+            error_d.setText("Ошибка вызова процедуры!\nПовторите попытку позднее")
+            error_d.exec_()
+            return
 
 
