@@ -113,12 +113,11 @@ class projWindow(QWidget):
         try:
             if self.name_edit.text() and self.cost_edit.text() and self.date_beg_edit.text() and self.date_end_edit.text():
 
-
                 cur = self.con.cursor()
 
                 query = r"INSERT INTO projects(NAME, COST, Department_Id, Date_beg, Date_end) " \
                         r"VALUES ('{}', {}, {}, TO_DATE('{}', 'YYYY-MM-DD')," \
-                        r" TO_DATE('{}', 'YYYY-MM-DD))".format(self.name_edit.text(),
+                        r" TO_DATE('{}', 'YYYY-MM-DD'))".format(self.name_edit.text(),
                                                                             int(self.cost_edit.text()),
                                                                             int(self.dep_combobox.currentText().split()[0]),
                                                                             self.date_beg_edit.text(),
@@ -131,18 +130,20 @@ class projWindow(QWidget):
 
             elif self.name_edit.text() and self.cost_edit.text() and self.date_beg_edit.text() and not self.date_end_edit.text():
 
-
                 cur = self.con.cursor()
 
                 query = r"INSERT INTO projects(NAME, COST, Department_Id, Date_beg) " \
                         r"VALUES ('{}', {}, {}, TO_DATE('{}', 'YYYY-MM-DD'))".format(self.name_edit.text(),
-                                                                                                int(self.cost_edit.text()),
-                                                                                                int(self.dep_combobox.currentText().split()[0]),
-                                                                                                self.date_beg_edit.text())
-                print(query)
+                                                                                     int(self.cost_edit.text()),
+                                                                                     int(self.dep_combobox.currentText().split()[0]),
+                                                                                     self.date_beg_edit.text())
+                # print(query)
 
                 cur.execute(query)
+                # print(query)
+
                 self.update_table()
+                print(query)
             else:
                 error_d = QMessageBox()
                 error_d.setIcon(QMessageBox.Critical)
@@ -378,14 +379,12 @@ class projWindow(QWidget):
         self.update_id_combobox()
         self.update_dep_combobox()
 
-
     def commit_clicked(self):
         self.con.commit()
         self.clear_all()
         self.update_table()
         self.update_id_combobox()
         self.update_dep_combobox()
-
 
     def rollback_clicked(self):
         self.con.rollback()
