@@ -117,8 +117,8 @@ class projWindow(QWidget):
                 cur = self.con.cursor()
 
                 query = r"INSERT INTO projects(NAME, COST, Department_Id, Date_beg, Date_end) " \
-                        r"VALUES ('{}', {}, {}, TO_DATE('{}', 'YYYY-MM-DD HH24:MI:SS')," \
-                        r" TO_DATE('{}', 'YYYY-MM-DD HH24:MI:SS'))".format(self.name_edit.text(),
+                        r"VALUES ('{}', {}, {}, TO_DATE('{}', 'YYYY-MM-DD')," \
+                        r" TO_DATE('{}', 'YYYY-MM-DD))".format(self.name_edit.text(),
                                                                             int(self.cost_edit.text()),
                                                                             int(self.dep_combobox.currentText().split()[0]),
                                                                             self.date_beg_edit.text(),
@@ -135,7 +135,7 @@ class projWindow(QWidget):
                 cur = self.con.cursor()
 
                 query = r"INSERT INTO projects(NAME, COST, Department_Id, Date_beg) " \
-                        r"VALUES ('{}', {}, {}, TO_DATE('{}', 'YYYY-MM-DD HH24:MI:SS'))".format(self.name_edit.text(),
+                        r"VALUES ('{}', {}, {}, TO_DATE('{}', 'YYYY-MM-DD'))".format(self.name_edit.text(),
                                                                                                 int(self.cost_edit.text()),
                                                                                                 int(self.dep_combobox.currentText().split()[0]),
                                                                                                 self.date_beg_edit.text())
@@ -150,11 +150,11 @@ class projWindow(QWidget):
                 error_d.setWindowTitle("Ошибка!")
                 error_d.exec_()
         except:
-            print("Неизвестная ошибка!")
             error_d = QMessageBox()
             error_d.setIcon(QMessageBox.Critical)
-            error_d.setWindowTitle("Ошибка!")
-            error_d.setWindowTitle("Неизвестная ошибка!")
+            error_d.setWindowTitle("Ошибка добавления данных")
+            error_d.setText('Дата начала проекта должна быть меньше даты завершения!')
+            error_d.exec_()
 
     def delete_proj(self):
         try:
@@ -167,38 +167,73 @@ class projWindow(QWidget):
             self.update_table()
             print(query)
         except:
-            print("Неизвестная ошибка!")
+            # print("Ошибка удаления данных!")
+            # print(query)
             error_d = QMessageBox()
             error_d.setIcon(QMessageBox.Critical)
-            error_d.setWindowTitle("Ошибка удаления данных!")
-            error_d.setWindowTitle("Неизвестная ошибка!")
-
-    def update_proj(self):
-
-        try:
-            cur = self.con.cursor()
-            #даже так у меня не работет
-            query = r"Update projects set name = '{}', " \
-                    r"Cost = {} " \
-                    r" where id = {}".format(self.name_edit.text(),
-                                             int(self.cost_edit.text()),
-                                             # int(self.dep_combobox.currentText().split()[0]),
-                                             32)
-            print(query)
-            cur.execute(query)
-            self.update_id_combobox()
-            self.update_dep_combobox()
-            self.update_table()
-            self.clear_all()
-            self.update_edits()
-
-        except:
-            error_d = QMessageBox()
-            error_d.setIcon(QMessageBox.Critical)
-            error_d.setText("Ошибка обновления данных!")
-            error_d.setWindowTitle("Ошибка!")
+            error_d.setWindowTitle("Ошибка удаления данных")
+            error_d.setText('Невозможно удалить незанченнй проект!')
             error_d.exec_()
 
+    def update_proj(self):
+        if self.date_end_real_edit.text() != 'None' and self.date_end_real_edit.text():
+            try:
+                cur = self.con.cursor()
+                query = r"Update projects set name = '{}', " \
+                        r"Cost = {}, " \
+                        r"Department_id = {}, " \
+                        r"Date_beg = TO_DATE('{}', 'YYYY-MM-DD')," \
+                        r"Date_end = TO_DATE('{}', 'YYYY-MM-DD')," \
+                        r"Date_end_real = TO_DATE('{}', 'YYYY-MM-DD')" \
+                        r" where id = {}".format(self.name_edit.text(),
+                                                 int(self.cost_edit.text()),
+                                                 int(self.dep_combobox.currentText().split()[0]),
+                                                 self.date_beg_edit.text(),
+                                                 self.date_end_edit.text(),
+                                                 self.date_end_real_edit.text(),
+                                                 int(self.id_combobox.currentText()))
+                print(query)
+                cur.execute(query)
+                self.update_id_combobox()
+                self.update_dep_combobox()
+                self.update_table()
+                self.clear_all()
+                self.update_edits()
+
+            except:
+                error_d = QMessageBox()
+                error_d.setIcon(QMessageBox.Critical)
+                error_d.setText("Ошибка обновления данных!")
+                error_d.setWindowTitle("Ошибка!")
+                error_d.exec_()
+        else:
+            try:
+                cur = self.con.cursor()
+                query = r"Update projects set name = '{}', " \
+                        r"Cost = {}, " \
+                        r"Department_id = {}, " \
+                        r"Date_beg = TO_DATE('{}', 'YYYY-MM-DD')," \
+                        r"Date_end = TO_DATE('{}', 'YYYY-MM-DD')" \
+                        r" where id = {}".format(self.name_edit.text(),
+                                                 int(self.cost_edit.text()),
+                                                 int(self.dep_combobox.currentText().split()[0]),
+                                                 self.date_beg_edit.text(),
+                                                 self.date_end_edit.text(),
+                                                 int(self.id_combobox.currentText()))
+                print(query)
+                cur.execute(query)
+                self.update_id_combobox()
+                self.update_dep_combobox()
+                self.update_table()
+                self.clear_all()
+                self.update_edits()
+
+            except:
+                error_d = QMessageBox()
+                error_d.setIcon(QMessageBox.Critical)
+                error_d.setText("Проверьте введенные данные!")
+                error_d.setWindowTitle("Ошибка!")
+                error_d.exec_()
 
     def update_id_combobox(self):
         cur = self.con.cursor()
@@ -236,7 +271,10 @@ class projWindow(QWidget):
             ll.append(list(el))
         for i in range(0, self.N_ROWS):
             for j in range(0, 6):
-                self.table.setItem(i, j, QTableWidgetItem(str(ll[i][j])))
+                if j < 3:
+                    self.table.setItem(i, j, QTableWidgetItem(str(ll[i][j])))
+                else:
+                    self.table.setItem(i, j, QTableWidgetItem(str(ll[i][j]).split()[0]))
 
     def update_edits(self):
         cur = self.con.cursor()
@@ -245,10 +283,11 @@ class projWindow(QWidget):
 
         self.name_edit.setText(str(l[int(self.id_combobox.currentIndex())][1]))
         self.cost_edit.setText(str(l[int(self.id_combobox.currentIndex())][2]))
+        self.dep_combobox.setCurrentText(str(l[int(self.id_combobox.currentIndex())][3]))
 
-        self.date_beg_edit.setText(str(l[int(self.id_combobox.currentIndex())][4]))
-        self.date_end_edit.setText(str(l[int(self.id_combobox.currentIndex())][5]))
-        self.date_end_real_edit.setText(str((l[int(self.id_combobox.currentIndex())][6])))
+        self.date_beg_edit.setText(str(l[int(self.id_combobox.currentIndex())][4]).split()[0])
+        self.date_end_edit.setText(str(l[int(self.id_combobox.currentIndex())][5]).split()[0])
+        self.date_end_real_edit.setText(str((l[int(self.id_combobox.currentIndex())][6])).split()[0])
 
     def id_changed(self):
         self.update_edits()
@@ -335,10 +374,18 @@ class projWindow(QWidget):
             self.delete_proj()
         elif self.apply_btn.text() == 'Изменить':
             self.update_proj()
+        self.update_table()
+        self.update_id_combobox()
+        self.update_dep_combobox()
+
 
     def commit_clicked(self):
         self.con.commit()
         self.clear_all()
+        self.update_table()
+        self.update_id_combobox()
+        self.update_dep_combobox()
+
 
     def rollback_clicked(self):
         self.con.rollback()

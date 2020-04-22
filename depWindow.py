@@ -84,7 +84,7 @@ class depWindow(QWidget):
         self.table.resize(520, 450)
         # self.table.setDisabled(True)
         self.update_table()
-        self.update_combobox()
+        self.update_dep_combobox()
         self.update_emp_combobox()
         self.hide_all()
 
@@ -103,6 +103,7 @@ class depWindow(QWidget):
             error_d.setIcon(QMessageBox.Critical)
             error_d.setWindowTitle("Ошибка!")
             error_d.setWindowTitle("Похоже сотрудник уже состоит в отделе!")
+            error_d.exec_()
 
     def add_dep(self):
         try:
@@ -114,12 +115,12 @@ class depWindow(QWidget):
             self.clear_all()
 
         except:
-            print(query)
+            # print(query)
             error_d = QMessageBox()
             error_d.setIcon(QMessageBox.Critical)
             error_d.setWindowTitle("Ошибка!")
-            error_d.setWindowTitle("Похоже сотрудник уже состоит в отделе!")
-        print(query)
+            error_d.setText("Невозможно выполнить операцию!")
+            error_d.exec_()
 
     def delete_emp(self):
         try:
@@ -129,7 +130,7 @@ class depWindow(QWidget):
                                                                              self.emp_id_combobox.currentText().split()[0])
             cur.execute(query)
             self.update_table()
-            self.update_combobox()
+            self.update_dep_combobox()
             self.update_emp_combobox()
             self.update_table()
 
@@ -146,21 +147,20 @@ class depWindow(QWidget):
             query = r"DELETE from Departments " \
                     r"where id = {}".format(self.dep_id_combobox.currentText().split()[0])
             cur.execute(query)
-            print(query)
+            # print(query)
             self.update_table()
-            self.update_combobox()
+            self.update_dep_combobox()
             self.update_emp_combobox()
             self.update_table()
         except:
-            print(query)
+            # print(query)
 
             error_d = QMessageBox()
             error_d.setIcon(QMessageBox.Critical)
             error_d.setWindowTitle("Ошибка удаления данных")
             error_d.setWindowTitle("Неизвестная ошибка!")
 
-
-    def update_combobox(self):
+    def update_dep_combobox(self):
         cur = self.con.cursor()
         self.dep_id_combobox.clear()
         cur.execute("select id, name from departments order by id")
@@ -231,9 +231,9 @@ class depWindow(QWidget):
         self.dep_id_combobox.show()
         self.emp_id_combobox.show()
 
-
+        self.apply_btn2.move(670, 400)
+        self.apply_btn1.move(670, 200)
         self.dep_name_edit.show()
-
 
         self.apply_btn1.setText('Добавить сотрудника')
         self.apply_btn2.setText('Добавить отдел')
@@ -263,6 +263,10 @@ class depWindow(QWidget):
 
         self.apply_btn1.setText('Удалить сотрудника')
         self.apply_btn2.setText('Удалить отдел')
+        self.apply_btn2.move(670, 200)
+
+        self.apply_btn1.move(670, 250)
+
         self.rollback_btn.setText('Отменить')
 
         self.apply_btn1.show()
@@ -276,22 +280,31 @@ class depWindow(QWidget):
             self.add_emp()
         elif self.apply_btn1.text() == 'Удалить сотрудника':
             self.delete_emp()
+        self.update_emp_combobox()
+        self.update_dep_combobox()
+        self.update_table()
 
     def apply2_clicked(self):
         if self.apply_btn2.text() == 'Добавить отдел':
             self.add_dep()
         elif self.apply_btn2.text() == 'Удалить отдел':
             self.delete_dep()
+        self.update_emp_combobox()
+        self.update_dep_combobox()
+        self.update_table()
+
 
     def commit_clicked(self):
         self.con.commit()
+        self.update_emp_combobox()
+        self.update_dep_combobox()
+        self.update_table()
 
     def rollback_clicked(self):
         self.con.rollback()
         self.update_table()
-        self.update_combobox()
+        self.update_dep_combobox()
         self.update_emp_combobox()
-
 
     def hide_all(self):
         self.title_label.setVisible(False)
