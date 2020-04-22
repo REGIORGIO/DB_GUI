@@ -1,13 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QGridLayout, QWidget, QPushButton, QToolTip, QLabel, QComboBox, QLineEdit, QErrorMessage, QMessageBox, QRadioButton, QGroupBox, QVBoxLayout
 from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-import secondaryWindow
-import procWindow
-import sys
 import startWindow
 import resultWindow
-import cx_Oracle
-from datetime import datetime
 
 class procWindow(QWidget):
     def __init__(self, con):
@@ -15,12 +9,10 @@ class procWindow(QWidget):
         self.con = con
         self.resWindow = resultWindow.resultWindow(self.con)
         self.setGeometry(1500, 400, 900, 500)
-        ##self.setGeometry(300, 200, 550, 250)
         self.setFixedSize(self.size())
         self.setWindowTitle('Выберите процедуру')
 
         first_btn = QPushButton('Отделы и среднее время их работы над проектами', self)
-        ##first_btn.setToolTip('Вывести все отделы и вре')
         first_btn.resize(500, 40)
         first_btn.move(200, 10)
         first_btn.setFont(QFont('Helvetica', 15))
@@ -144,16 +136,12 @@ class procWindow(QWidget):
         self.btn_show4.setFont(QFont('Helvetica', 15))
 
         self.btn_show4.hide()
-        ##self.box1.hide()
-        ##self.box1.addItems()
 
         back_btn = QPushButton('Вернуться на главную страницу', self)
         back_btn.resize(300, 50)
         back_btn.move(300, 440)
         back_btn.setFont(QFont('Helvetica', 15))
         back_btn.clicked.connect(self.backToStart)
-
-        ##self.show()
 
     def backToStart(self):
         self.procWindow = startWindow.StartWindow(self.con)
@@ -190,10 +178,7 @@ class procWindow(QWidget):
         self.l1.hide()
         self.l2.hide()
         self.btn_show4.hide()
-        ##self.showRes2()
         self.l4.show()
-        ##self.l5.show()
-        ##self.text.show()
         self.dd.show()
         self.mm.show()
         self.yy.show()
