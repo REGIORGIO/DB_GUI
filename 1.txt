@@ -1,3 +1,3 @@
-('Otdelochnuy', 0.258)
-('Design', None)
-('Stroitelnuy', 1.355)
+('Alpha', 4.548)
+('Gamma', 4.484)
+('Beta', 4.806)

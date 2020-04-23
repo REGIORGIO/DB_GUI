@@ -94,7 +94,6 @@ class userWindow(QWidget):
             for j in range(0, 3):
                 self.table.setItem(i, j, QTableWidgetItem(str(ll[i][j])))
 
-
     def add_clicked(self):
         self.hide_all()
 
@@ -170,7 +169,6 @@ class userWindow(QWidget):
         elif self.apply_btn1.text() == 'Удалить':
             self.delete_user()
 
-
     def commit_clicked(self):
         self.con.commit()
 
@@ -193,8 +191,9 @@ class userWindow(QWidget):
         except:
             error_d = QMessageBox()
             error_d.setIcon(QMessageBox.Critical)
-            error_d.setWindowTitle("Ошибка удаления данных")
-            error_d.setWindowTitle("Неизвестная ошибка!")
+            error_d.setText("Ошибка удаления данных")
+            error_d.setWindowTitle("Ошибка!")
+            error_d.exec_()
 
     def add_user(self):
         try:

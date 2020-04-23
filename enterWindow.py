@@ -37,7 +37,7 @@ class EnterWindow(PyQt5.QtWidgets.QWidget):
         if len(login) == 0 or len(password) == 0:
             error_d = PyQt5.QtWidgets.QMessageBox()
             error_d.setIcon(PyQt5.QtWidgets.QMessageBox.Critical)
-            error_d.setText("Enter login and password!")
+            error_d.setText("Заполните оба поля!")
             error_d.setWindowTitle("Error!")
             error_d.exec_()
             return
@@ -60,7 +60,7 @@ class EnterWindow(PyQt5.QtWidgets.QWidget):
                 else:
                     error_d = PyQt5.QtWidgets.QMessageBox()
                     error_d.setIcon(PyQt5.QtWidgets.QMessageBox.Critical)
-                    error_d.setText("Invalid login and password!")
+                    error_d.setText("Неправильный логин или пароль!")
                     error_d.setWindowTitle("Error!")
                     error_d.exec_()
                     return
@@ -73,8 +73,6 @@ class EnterWindow(PyQt5.QtWidgets.QWidget):
                 error_d.exec_()
                 return
             print("Connection is successful")
-
-
 
 
 if __name__ == '__main__':

@@ -4,3 +4,4 @@ __pycache__/secondaryWindow.cpython-37.pyc
 *.iml
 *.xml
 .DS_Store
+resultWindow.py

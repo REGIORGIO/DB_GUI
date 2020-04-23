@@ -2,9 +2,9 @@ from PyQt5.QtWidgets import QApplication, QGridLayout, QWidget, QPushButton, QTo
 from PyQt5.QtGui import *
 import connect
 import procedureWindow
-import empWindow
-import depWindow
-import projWindow
+import employeeWindow
+import departmentWindow
+import projectWindow
 import enterWindow
 import usersWindow
 
@@ -18,11 +18,10 @@ class StartWindow(QWidget):
         self.setWindowTitle('Главное меню')
 
         self.procWindow = procedureWindow.procWindow(self.con)
-        self.projWindow = projWindow.projWindow(self.con)
-        self.depWindow = depWindow.depWindow(self.con)
-        self.empWindow = empWindow.empWindow(self.con)
+        self.projWindow = projectWindow.projWindow(self.con)
+        self.depWindow = departmentWindow.depWindow(self.con)
+        self.empWindow = employeeWindow.empWindow(self.con)
         self.userWindow = usersWindow.userWindow(self.con)
-
 
         titleLabel = QLabel('Выберите дальнейшнее действие', self)
         titleLabel.move(120, 50)
