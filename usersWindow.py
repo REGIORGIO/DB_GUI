@@ -84,7 +84,7 @@ class userWindow(QWidget):
         self.N_ROWS = cur.fetchone()[0]
         self.table.setRowCount(self.N_ROWS)
         self.table.setHorizontalHeaderLabels(['ID', 'Логин', 'Хеш пароля'])
-        cur.execute('select * from Users_GUI order by id')
+        cur.execute('select * from Users_GUI')
 
         l = cur.fetchall()
         ll = []
@@ -113,8 +113,6 @@ class userWindow(QWidget):
         ##self.update_combobox()
 
     def delete_clicked(self):
-        self.login.clear()
-        self.password.clear()
         self.hide_all()
 
         self.title_label_delete.setText('Удалите пользователя')
@@ -164,8 +162,6 @@ class userWindow(QWidget):
     def apply1_clicked(self):
         if self.apply_btn1.text() == 'Добавить':
             self.add_user()
-            self.login.clear()
-            self.password.clear()
         elif self.apply_btn1.text() == 'Удалить':
             self.delete_user()
 
