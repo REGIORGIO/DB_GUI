@@ -1,8 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QGridLayout, QWidget, QPushButton, QToolTip, QLabel, QComboBox, QLineEdit, \
-    QErrorMessage, QMessageBox, QRadioButton, QGroupBox, QVBoxLayout, QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QWidget, QPushButton, QLabel, QComboBox, QLineEdit, QMessageBox, QTableWidget, QTableWidgetItem
 from PyQt5.QtGui import *
-import startWindow
-import resultWindow
+
 
 class userWindow(QWidget):
     def __init__(self, con):
@@ -174,7 +172,6 @@ class userWindow(QWidget):
         self.update_combobox()
 
     def delete_user(self):
-
         try:
             cur = self.con.cursor()
             query = r"DELETE from Users_GUI " \

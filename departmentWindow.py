@@ -7,7 +7,7 @@ class depWindow(QWidget):
     def __init__(self, con):
         super().__init__()
         self.con = con
-        self.setGeometry(1500, 400, 900, 500)
+        self.setGeometry(1400, 400, 900, 500)
         self.setFixedSize(self.size())
         self.setWindowTitle('Отделы')
 

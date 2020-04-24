@@ -3,14 +3,15 @@ from PyQt5.QtGui import *
 import startWindow
 import resultWindow
 
+
 class procWindow(QWidget):
     def __init__(self, con):
         super().__init__()
         self.con = con
         self.resWindow = resultWindow.resultWindow(self.con)
-        self.setGeometry(1500, 400, 900, 500)
+        self.setGeometry(1400, 400, 900, 500)
         self.setFixedSize(self.size())
-        self.setWindowTitle('Выберите процедуру')
+        self.setWindowTitle('Процедуры')
 
         first_btn = QPushButton('Отделы и среднее время их работы над проектами', self)
         first_btn.resize(500, 40)

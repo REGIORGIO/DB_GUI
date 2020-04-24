@@ -11,7 +11,7 @@ class projWindow(QWidget):
         self.setWindowTitle('Проекты')
 
         self.con = con
-        self.setGeometry(1500, 400, 1000, 500)
+        self.setGeometry(1400, 400, 900, 500)
         self.setFixedSize(self.size())
 
         self.add_btn = QPushButton('Добавить', self)

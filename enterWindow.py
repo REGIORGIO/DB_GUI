@@ -9,7 +9,7 @@ import sys
 class EnterWindow(PyQt5.QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.setGeometry(600, 200, 300, 160)
+        self.setGeometry(800, 400, 300, 160)
         self.setFixedSize(self.size())
         self.setWindowTitle('Вход')
 

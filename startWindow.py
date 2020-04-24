@@ -22,7 +22,6 @@ class StartWindow(QWidget):
         self.depWindow = departmentWindow.depWindow(self.con)
         self.empWindow = employeeWindow.empWindow(self.con)
         self.userWindow = usersWindow.userWindow(self.con)
-
         titleLabel = QLabel('Выберите дальнейшнее действие', self)
         titleLabel.move(120, 50)
         titleLabel.setFont(QFont('Helvetica', 20))
@@ -77,6 +76,7 @@ class StartWindow(QWidget):
         self.depWindow.close()
         self.procWindow.close()
         self.projWindow.close()
+        self.userWindow.close()
         self.enterWindow = enterWindow.EnterWindow()
         connect.shutDownConnection(self.con)
         self.enterWindow.show()
@@ -92,6 +92,9 @@ class StartWindow(QWidget):
         if self.depWindow.isVisible():
             self.depWindow.close()
 
+        if self.userWindow.isVisible():
+            self.userWindow.close()
+
     def EmpButtonClicked(self):
         self.empWindow.show()
 
@@ -104,6 +107,9 @@ class StartWindow(QWidget):
         if self.depWindow.isVisible():
             self.depWindow.close()
 
+        if self.userWindow.isVisible():
+            self.userWindow.close()
+
     def DepButtonClicked(self):
         self.depWindow.show()
         if self.projWindow.isVisible():
@@ -115,6 +121,9 @@ class StartWindow(QWidget):
         if self.procWindow.isVisible():
             self.procWindow.close()
 
+        if self.userWindow.isVisible():
+            self.userWindow.close()
+
     def ProjButtonClicked(self):
         self.projWindow.show()
         if self.procWindow.isVisible():
@@ -125,6 +134,9 @@ class StartWindow(QWidget):
 
         if self.depWindow.isVisible():
             self.depWindow.close()
+
+        if self.userWindow.isVisible():
+            self.userWindow.close()
 
     def UserButtonClicked(self):
         self.userWindow.show()
