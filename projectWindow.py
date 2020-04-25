@@ -11,7 +11,7 @@ class projWindow(QWidget):
         self.setWindowTitle('Проекты')
 
         self.con = con
-        self.setGeometry(1400, 400, 900, 500)
+        self.setGeometry(1400, 400, 1000, 500)
         self.setFixedSize(self.size())
 
         self.add_btn = QPushButton('Добавить', self)
@@ -103,7 +103,7 @@ class projWindow(QWidget):
         self.table.setColumnCount(6)
         self.table.resize(630, 450)
 
-        # self.table.setDisabled(True)
+
         self.update_table()
         self.update_id_combobox()
         self.update_dep_combobox()
@@ -111,7 +111,11 @@ class projWindow(QWidget):
 
     def add_proj(self):
         try:
-            if self.name_edit.text() and self.cost_edit.text() and self.date_beg_edit.text() and self.date_end_edit.text():
+            if self.name_edit.text() \
+                    and self.cost_edit.text() \
+                    and int(self.cost_edit.text()) >= 0 \
+                    and self.date_beg_edit.text() \
+                    and self.date_end_edit.text():
 
                 cur = self.con.cursor()
 
@@ -128,7 +132,11 @@ class projWindow(QWidget):
                 # self.con.commit()
                 self.update_table()
 
-            elif self.name_edit.text() and self.cost_edit.text() and self.date_beg_edit.text() and not self.date_end_edit.text():
+            elif self.name_edit.text() \
+                    and self.cost_edit.text() \
+                    and int(self.cost_edit.text()) >= 0 \
+                    and self.date_beg_edit.text()\
+                    and not self.date_end_edit.text():
 
                 cur = self.con.cursor()
 
@@ -154,7 +162,7 @@ class projWindow(QWidget):
             error_d = QMessageBox()
             error_d.setIcon(QMessageBox.Critical)
             error_d.setWindowTitle("Ошибка добавления данных")
-            error_d.setText('Дата начала проекта должна быть меньше даты завершения!')
+            error_d.setText('Вы ввели некорректные данные!')
             error_d.exec_()
 
     def delete_proj(self):
@@ -375,9 +383,9 @@ class projWindow(QWidget):
             self.delete_proj()
         elif self.apply_btn.text() == 'Изменить':
             self.update_proj()
-        self.update_table()
-        self.update_id_combobox()
-        self.update_dep_combobox()
+        # self.update_table()
+        # self.update_id_combobox()
+        # self.update_dep_combobox()
 
     def commit_clicked(self):
         self.con.commit()
